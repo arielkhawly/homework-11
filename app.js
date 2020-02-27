@@ -27,12 +27,16 @@ app.get('/api/notes', function (req, res) {
 });
 app.post('/api/notes', function (req, res) {
     let newNote = req.body;
-    // newNote.id = notes.length + 1;
+    newNote.id = notes.length + 1;
     notes.push(newNote);
     fs.writeFileSync(dbPath, JSON.stringify(notes));
     res.json(newNote);
 });
 app.delete('/api/notes/:id', function (req, res) {
+    let deletionId = req.params.id;
+    notes = notes.filter(note => note.id !== deletionId);
+    fs.writeFileSync(dbPath, JSON.stringify(notes));
+    res.json(notes);
 
 });
 // Starts the server to begin listening
