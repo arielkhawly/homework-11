@@ -2,8 +2,16 @@ let fs = require('fs');
 let express = require('express');
 let path = require("path");
 let app = express();
-let PORT = 3000;
-let notes = fs.readFileSync('./db/db.json', 'utf8')
+let dbPath = path.join(__dirname, "db", "db.json");
+let notes = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
+
+let PORT = process.env.PORT || 3000;
+
+// Sets up the Express app to handle data parsing
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+app.use(express.static('public'));
 
 //ROUTES - user sees these!
 app.get('/notes', function (req, res) {
@@ -18,8 +26,11 @@ app.get('/api/notes', function (req, res) {
     return res.json(notes);
 });
 app.post('/api/notes', function (req, res) {
- let newNote = req.body;
- notes.push(newNote);
+    let newNote = req.body;
+    // newNote.id = notes.length + 1;
+    notes.push(newNote);
+    fs.writeFileSync(dbPath, JSON.stringify(notes));
+    res.json(newNote);
 });
 app.delete('/api/notes/:id', function (req, res) {
 
