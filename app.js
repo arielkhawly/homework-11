@@ -17,9 +17,6 @@ app.get('/notes', function (req, res) {
     return res.sendFile(path.join(__dirname, "public", "notes.html")
     )
 });
-app.get('*', function (req, res) {
-    return res.sendFile(path.join(__dirname, "public", "index.html"))
-});
 //API ROUTES - the backend ! 
 app.get('/api/notes', function (req, res) {
     return res.json(notes);
@@ -36,7 +33,10 @@ app.delete('/api/notes/:id', function (req, res) {
     notes = notes.filter(note => note.id !== deletionId);
     fs.writeFileSync(dbPath, JSON.stringify(notes));
     res.json(notes);
-
+   
+});
+app.get('*', function (req, res) {
+    return res.sendFile(path.join(__dirname, "public", "index.html"))
 });
 // Starts the server to begin listening
 // =============================================================
