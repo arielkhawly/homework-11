@@ -30,7 +30,7 @@ app.post('/api/notes', function (req, res) {
 });
 app.delete('/api/notes/:id', function (req, res) {
     let deletionId = req.params.id;
-    notes = notes.filter(note => note.id !== deletionId);
+    notes = notes.filter(note => note.id != deletionId);
     fs.writeFileSync(dbPath, JSON.stringify(notes));
     res.json(notes);
    
